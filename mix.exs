@@ -23,7 +23,7 @@ defmodule Metex.Mixfile do
   defp deps do
     [
       {:httpoison, "~> 0.13"},
-      {:json, "~> 1.0"},
+      {:poison, "~> 3.1"},
       {:credo, "~> 0.8", only: [:dev, :test], runtime: false}
     ]
   end

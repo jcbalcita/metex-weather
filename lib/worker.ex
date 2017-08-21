@@ -15,7 +15,7 @@ defmodule Metex.Worker do
   end
 
   defp parse_response({:ok, %HTTPoison.Response{body: body, status_code: 200}}) do
-    body |> JSON.decode! |> compute_temperature
+    body |> Poison.decode! |> compute_temperature
   end
 
   defp parse_response(_) do
