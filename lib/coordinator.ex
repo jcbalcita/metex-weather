@@ -11,6 +11,8 @@ defmodule Metex.Coordinator do
         loop(new_results, num_expected_results)
       :exit ->
         IO.puts(results |> Enum.sort |> Enum.join(", "))
+      _ ->
+        loop(results, num_expected_results)
     end
   end
 end
