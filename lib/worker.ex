@@ -7,9 +7,10 @@ defmodule Metex.Worker do
       {sender_pid, location} -> send(sender_pid, {:ok, temperature_of location})
       _ -> IO.puts "I don't know how to respond to this message."
     end
-    loop
+    loop()
   end
 
+  @spec temperature_of(String) :: any
   def temperature_of(location) do
     result = location |> url_for |> HTTPoison.get |> parse_response
     case result do
@@ -17,7 +18,6 @@ defmodule Metex.Worker do
       :error -> "#{location} not found"
     end
   end
-
   defp url_for(location) do
     location = URI.encode location
     "http://api.openweathermap.org/data/2.5/weather?q=#{location}&appid=#{api_key()}"
