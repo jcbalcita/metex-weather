@@ -8,14 +8,8 @@ use Mix.Config
 # if you want to provide default values for your application for
 # 3rd-party users, it should be done in your "mix.exs" file.
 
-# You can configure your application as:
-#
-#     config :metex, key: :value
-#
-# and access this configuration in your application as:
-#
-#     Application.get_env(:metex, :key)
-#
+ config :metex, api_key: System.get_env("API_KEY")
+
 # You can also configure a 3rd-party app:
 #
 #     config :logger, level: :info
