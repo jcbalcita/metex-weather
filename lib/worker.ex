@@ -1,4 +1,6 @@
 defmodule Metex.Worker do
+  alias Metex.Worker
+  alias Metex.Coordinator
 
   def loop do
     receive do
@@ -8,12 +10,31 @@ defmodule Metex.Worker do
     loop()
   end
 
+  def temperatures_of(cities) do
+    coordinator = spawn(Coordinator, :loop, [[], Enum.count(cities)])
+
+    cities |> Enum.each(fn city ->
+      worker = spawn(Worker, :loop, [])
+      send worker, {coordinator, city}
+    end)
+  end
+
   def temperature_of(location) do
-    result = url_for(location) |> HTTPoison.get |> parse_response
-    case result do
-      {:ok, temp} -> "#{location}: #{temp} °C"
-      :error      -> "#{location} not found"
+    case raw_temperature_of(location) do
+      {:ok, celsius} -> "#{location}: #{celsius} °C"
+      :error         -> "Unable to find weather for #{location}"
     end
+  end
+
+  def fahrenheit_temp_of(location) do
+    case raw_temperature_of(location) do
+      {:ok, celsius} -> "#{location}: #{trunc((celsius * 1.8) + 32)} °F"
+      :error         -> "Unable to find weather for #{location}"
+    end
+  end
+
+  defp raw_temperature_of(location) do
+    url_for(location) |> HTTPoison.get |> parse_response
   end
 
   defp url_for(location) do
